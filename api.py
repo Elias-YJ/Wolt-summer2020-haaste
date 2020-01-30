@@ -1,6 +1,7 @@
 import flask
 import json
 from flask import request, jsonify
+from helper_functions import none_handler
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -17,7 +18,7 @@ def home():
 
 
 # A route to return all of the available entries in our catalog.
-@app.route('/restaurants/', methods=['GET'])
+@app.route('/restaurants', methods=['GET'])
 def api_all():
     return jsonify(restaurant_data)
 
@@ -31,12 +32,6 @@ def api_id():
     else:
         return "Error: No query argument provided. Please specify a query keyword."
 
-    def none_handler(string):
-        if string is None:
-            return ''
-        else:
-            return string
-
     # Return restaurants that have a match by filtering others.
     results = list(filter(lambda x: q.lower() in none_handler(x['description']).lower()
                           or q.lower() in none_handler(x['name']).lower()
@@ -48,4 +43,5 @@ def api_id():
     return jsonify(results)
 
 
-app.run()
+if __name__ == '__main__':
+    app.run()

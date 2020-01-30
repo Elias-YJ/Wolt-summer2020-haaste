@@ -23,6 +23,14 @@ class TestBasic(unittest.TestCase):
     def test_restaurants_page(self):
         response = self.app.get('/restaurants')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.data), self.restaurant_data)
+
+    def test_limited_query(self):
+        response = self.app.get('/restaurants/search?q=eliel')
+        response2 = self.app.get('restaurants/search?q=Momotoko')
+        self.assertEqual(json.loads(response.data)['restaurants'][0]['blurhash']
+                         , 'UFCsQ;M|slM~$kfloLsA02xsR.xWxuslW:W=')
+        self.assertEqual(len(json.loads(response2.data)['restaurants']), 1)
 
 
 if __name__ == '__main__':
